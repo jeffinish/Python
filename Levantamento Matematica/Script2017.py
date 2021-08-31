@@ -24,11 +24,13 @@ pd.set_option("display.max_columns",5) #Seta o máximmo de colunas para ser exib
 
 # Ano : 2017
 df = pd.read_excel("resultados_conceito_enade_2017.xlsx") #Abre o arquivo xlxs
-df = df.drop(["Código da IES","Sigla da IES","Código do Curso","Código do Município",
+df = df.drop(["Código da IES","Sigla da IES","Código do Curso","Código do Município","Organização Acadêmica",
             "Nota Bruta - FG","Nota Padronizada - FG", "Nota Bruta - CE", "Nota Padronizada - CE",
             "Observação"]
             ,axis=1) #Dropa algumas colunas
-df = df.rename(columns={"Nº de Concluintes Inscritos":"Concluintes Inscritos","Nº  de Concluintes Participantes":"Concluintes Participantes"})
+df = df.rename(columns={"Nº de Concluintes Inscritos":"Concluintes Inscritos",
+                        "Nº  de Concluintes Participantes":"Concluintes Participantes",
+                        "Sigla da UF":"Estado"})
 
 #Print teste
 #print(df)
