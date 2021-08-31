@@ -26,7 +26,7 @@ MAT = pd.concat([MatBac,MatLic],axis=0).reset_index(drop=True) #Concatena as dua
 
 #Print teste
 #print(MAT.info())
-print(MAT["Conceito Enade (Contínuo)"].value_counts().sort_index())
+#print(MAT["Conceito Enade (Contínuo)"].value_counts())
 #print(MAT["Conceito Enade (Faixa)"].value_counts())
 
 MAT["Conceito Enade (Faixa)"] = pd.to_numeric(MAT["Conceito Enade (Faixa)"],errors="coerce") #Ajusta a coluna Conceito Enade (Faixa) para número
@@ -37,8 +37,6 @@ MAT["Conceito Enade (Contínuo)"] = pd.to_numeric(MAT["Conceito Enade (Contínuo
 MAT["Conceito Enade (Contínuo)"] = MAT["Conceito Enade (Contínuo)"].fillna(0)
 #Print teste
 #print(MAT.info())
-print(MAT["Conceito Enade (Contínuo)"].value_counts().sort_index())
-#print(MAT["Conceito Enade (Faixa)"].value_counts())
 
 #Aqui começa uma gambiarra para ober os X estados com maior número de cursos de matemática
 #X = (MAT["Sigla da UF"].value_counts().to_frame("Quantidade").reset_index())
@@ -73,11 +71,11 @@ print(MAT["Conceito Enade (Contínuo)"].value_counts().sort_index())
 #fig.show()
 
 #Print teste
-#print(MAT.info())
+print(MAT.info())
 #print(MAT["Conceito Enade (Contínuo)"])
 
 #Exporta o arquivo em CSV
-MAT.to_csv("enade_matematica_2017.csv",index=False)
+MAT.to_csv("enade_matematica_2017.csv")
 
 
 
