@@ -1,7 +1,7 @@
 # Arquivo para analisar arquivos do enade pra Matemática
 import pandas as pd #Importa o Panda para trabalhar com o arquivo Excel
-import plotly.express as px #Importa o Plotly para fazer gráficos e histogramas
-from googlesearch import search #Importa a API do google pra procurar
+#import plotly.express as px #Importa o Plotly para fazer gráficos e histogramas
+#from googlesearch import search #Importa a API do google pra procurar
 
 pd.set_option("display.max_rows",10) #Seta o máximo de linhas para ser exibida
 pd.set_option("display.max_columns",5) #Seta o máximmo de colunas para ser exibida
@@ -24,17 +24,12 @@ pd.set_option("display.max_columns",5) #Seta o máximmo de colunas para ser exib
 
 # Ano : 2017
 df = pd.read_excel("resultados_conceito_enade_2017.xlsx") #Abre o arquivo xlxs
-df = df.drop(["Código da IES","Sigla da IES","Código do Curso","Código do Município","Organização Acadêmica",
-            "Nota Bruta - FG","Nota Padronizada - FG", "Nota Bruta - CE", "Nota Padronizada - CE",
-            "Observação"]
-            ,axis=1) #Dropa algumas colunas
-df = df.rename(columns={"Nº de Concluintes Inscritos":"Concluintes Inscritos",
-                        "Nº  de Concluintes Participantes":"Concluintes Participantes",
-                        "Sigla da UF":"Estado"})
+df = df.drop(["Código da IES","Sigla da IES","Código do Curso","Código do Município","Organização Acadêmica","Nota Bruta - FG","Nota Padronizada - FG", "Nota Bruta - CE", "Nota Padronizada - CE","Observação"],axis=1) #Dropa algumas colunas
+df = df.rename(columns={"Nº de Concluintes Inscritos":"Concluintes Inscritos","Nº  de Concluintes Participantes":"Concluintes Participantes","Sigla da UF":"Estado"})
 
 #Print teste
 #print(df)
-print(df.info())
+#print(df.info())
 
 #Define os cursos a serem analisados
 MatBac = df[df["Área de Avaliação"] == "MATEMÁTICA (BACHARELADO)"] #Cria uma nova base com os Curso 1
@@ -58,6 +53,34 @@ MAT["Conceito Enade (Contínuo)"] = MAT["Conceito Enade (Contínuo)"].fillna(0)
 #print(MAT.info())
 #print(MAT["Conceito Enade (Contínuo)"].value_counts().sort_index())
 #print(MAT["Conceito Enade (Faixa)"].value_counts().sort_index()
+print(MAT.columns)
+
+## -- Organizando a base de dados -- ##
+
+# - Nome da IES - #
+#print(MAT["Nome da IES"].unique())
+MAT["Nome da IES"] = MAT["Nome da IES"].str.upper()   # Nome das IES todas em Maiúsculo
+#print(MAT["Nome da IES"].drop_duplicates().sort_values())
+
+# - Categoria Administrativa - #
+#print(MAT["Categoria Administrativa"].drop_duplicates().sort_values())
+
+# - Modalidade de Ensino - #
+#print(MAT["Modalidade de Ensino"].drop_duplicates().sort_values())
+
+# - Estado - #
+#print(MAT["Estado"].drop_duplicates().sort_values())
+
+# - Concluintes Inscritos - #
+#MAT["Concluintes Inscritos"].head()
+#MAT["Concluintes Participantes"].head()
+
+# - Conceito Enade (Faixa) - #
+MAT["Conceito Enade (Faixa)"].head()
+MAT["Conceito Enade (Faixa)"] = MAT["Conceito Enade (Faixa)"].astype(int)
+MAT["Conceito Enade (Faixa)"].head()
+
+
 
 #Exporta o arquivo em CSV
 MAT.to_csv("enade_matematica_2017.csv",index=False)
