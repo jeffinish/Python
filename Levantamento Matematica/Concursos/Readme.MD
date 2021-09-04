@@ -1,5 +1,13 @@
 # Levantamento de dados sobre concursos públicos para professor do curso de Matemática
 
+## Andamento 
+
+### Universidades Públicas Municipais - _(Em andamento)_
+
+- [x] Universidade Regional de Blumenau _(03/09/2021)_
+- [x] Faculdade de Filosofia Ciências e Letras de Alegre _(03/09/2021)_
+- [ ] ...
+
 ## Curiosidades até então
 
 * Existem universidades públicas municiais
