@@ -100,3 +100,82 @@ reg_porcentagem_conta.figure.suptitle("Análies Estatísticas")
 #reg_porcentagem_conta.set_title("Valor da Conta x Gorjeta - Regressão Linear")
 reg_porcentagem_conta.set(xlabel = "Valor da Conta",ylabel="Valor da Gorgeta")
 reg_porcentagem_conta.figure.savefig("Regressão Linear Valor da Conta x Porcentagem.png")
+
+## -- Pedir sobremesa x Gorjeta -- ##
+data.head()
+data[data.Sobremesa == "Sim"].describe()
+data[data.Sobremesa == "Não"].describe()
+sns.catplot(x="Sobremesa",y="Gorjeta",data=data)
+sns.relplot(x="Valor_da_Conta",y="Gorjeta",hue="Sobremesa",col="Sobremesa",data=data)
+sns.lmplot(x="Valor_da_Conta",y="Gorjeta",col="Sobremesa",hue="Sobremesa",data=data)
+sns.lmplot(x="Valor_da_Conta",y="Porcentagem",col="Sobremesa",hue="Sobremesa",data=data)
+# - Teste de Hipótese --- #
+
+## H0 - A distribuição da taxa de gorjeta é a mesma nos dois grupos - Com sobremesa x Sem Sobremesa
+## H1 - A distribuição da taxa de gorjeta é diferente nos dois grupos
+from scipy.stats import ranksums
+
+sobremesa = data.query("Sobremesa == 'Sim'").Porcentagem
+sem_sobremesa = data.query("Sobremesa == 'Não'").Porcentagem
+r = ranksums(sobremesa,sem_sobremesa)
+r
+print("O valor do p-value é {}".format(r.pvalue))
+### -> Com isso, aceitamos H0.
+
+
+
+##### ---- Aula 4 - Comparando e explorando os dias da semana ---- #####
+
+## --- Analisando os dias da semana --- ##
+
+sns.catplot(x="Dia_da_Semana",y="Valor_da_Conta",data=data)
+sns.relplot(x="Valor_da_Conta",y="Gorjeta",hue="Dia_da_Semana",col="Dia_da_Semana",data=data)
+sns.lmplot(x="Valor_da_Conta",y="Porcentagem",hue="Dia_da_Semana",col="Dia_da_Semana",data=data)
+data[data["Dia_da_Semana"] == "Sexta"].describe()
+data[data["Dia_da_Semana"] == "Sábado"].describe()
+data[data["Dia_da_Semana"] == "Domingo"].describe()
+data[data["Dia_da_Semana"] == "Quinta"].describe()
+## -> Podemos notar pelos dados, que a Sexta feita é o dia menos movimentado
+
+## - Análise das gorjetas por dia - ##
+media_geral_gorjetas = data.Gorjeta.mean()
+print("A média do valor de gorjeta é de {}".format(media_geral_gorjetas))
+
+# - Calculando os valores médio das gorjetas em cada dia - #
+data.groupby(["Dia_da_Semana"]).mean()[["Valor_da_Conta","Gorjeta","Porcentagem"]]  # - Aqui, calculamos a média dos valores Agrupados por dia da semana - O argumento [[]] indica quais colunas queremos que sejam exibidas.
+
+## - Teste de hipótese - #
+# H0 - A distribuição do valor da conta é igual para o Sábado e no Domingo
+# H1 - A distribuição do valor da conta é diferente para o Sábado e no Domingo
+
+Conta_Domingo = data.query("Dia_da_Semana == 'Domingo'").Valor_da_Conta
+Conta_Sabado = data.query("Dia_da_Semana == 'Sábado'").Valor_da_Conta
+r_conta = ranksums(Conta_Domingo,Conta_Sabado)
+print("O valor do p-value é {}".format(r_conta.pvalue))
+# -> Com isso, mantetemos a H0 -> A distribuição no valor da conta no sábado e no domingo são estatísticamente iguais. (Com 95% de confiança.)
+
+
+#### ---- Aula 5 - Distribuição de frequência e teste de hipótese ---- ####
+
+## - Análise do horário do dia -- ##
+
+# - Gerando alguns gráficos - #
+sns.catplot(x="Hora_do_dia",y="Valor_da_Conta",kind="swarm",data=data)
+sns.violinplot(x="Hora_do_dia",y="Valor_da_Conta",data=data)
+sns.boxplot(x="Hora_do_dia",y="Valor_da_Conta",data=data)
+# - Gerando histogramas - #
+# Para gerar histogramas, precisamos trabalhar com Querys, por isso as definições abaixo
+almoco = data.query("Hora_do_dia == 'Almoço'").Valor_da_Conta
+jantar = data.query("Hora_do_dia == 'Jantar'").Valor_da_Conta
+sns.displot(almoco)
+sns.displot(jantar)
+
+## - Teste de Hipotese - ##
+
+data.groupby(["Hora_do_dia"]).mean()[["Valor_da_Conta","Gorjeta","Porcentagem"]]
+#H0 - A distribuição dos valores do almoço e do jantar são iguais
+#H1 - A distribuição dos valores do almoço e do jantar são diferentes
+r_refeicao = ranksums(jantar,almoco)
+print("O valor do p-value é {}".format(r_refeicao.pvalue))
+
+# Aceitamos a Hipotese alternativa com 99% de probablidade.
