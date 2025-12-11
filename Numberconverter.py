@@ -17,4 +17,3 @@ for num in phone:
     phone_conv += digits_conv.get(num,"Confira o número") + " "
 
 print(phone_conv)
-9
